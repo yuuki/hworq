@@ -1,5 +1,17 @@
-hworq
-=====
+hworq: simple HTTP-based Job Queue
+==================================
+
+This software is still heavily under development.
+
+# What is DiamonDB?
+
+`hworq` is the simple HTTP-based job queue manager for every programming languages.
+
+- __Written in Go__
+
+# Motivation
+
+Almost all of the existing job queue implementations require to prepare a client library for each programming languages.
 
 # LICENSE
 
