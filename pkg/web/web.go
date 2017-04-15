@@ -18,7 +18,7 @@ type Handler struct {
 	server *http.Server
 }
 
-// Options for the web Handler.
+// Option for the web Handler.
 type Option struct {
 	Port string
 }
