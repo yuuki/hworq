@@ -4,7 +4,12 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"log"
 	"os"
+	"os/signal"
+	"syscall"
+
+	"github.com/yuuki/hworq/pkg/web"
 )
 
 const (
@@ -47,6 +52,19 @@ func (cli *CLI) Run(args []string) int {
 	if version {
 		fmt.Fprintf(cli.errStream, "%s version %s, build %s \n", Name, Version, GitCommit)
 		return 0
+	}
+
+	handler := web.New(&web.Option{
+		Port: port,
+	})
+	go handler.Run()
+
+	sigch := make(chan os.Signal, 1)
+	signal.Notify(sigch, syscall.SIGTERM, syscall.SIGINT)
+	s := <-sigch
+	if err := handler.Shutdown(s); err != nil {
+		log.Println(err)
+		return 3
 	}
 
 	return 0
