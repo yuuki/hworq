@@ -1,4 +1,10 @@
-memo = "83a4802abbcd830c4c05820735b0e6e6a9b525e116a5ec561a7f85fa82c79d98"
+memo = "5eaff06329ddf49f6a44876f0234155c63723fd23f26973d691bc7d50cdf156c"
+
+[[projects]]
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
 
 [[projects]]
   name = "github.com/urfave/negroni"

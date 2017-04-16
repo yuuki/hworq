@@ -1,4 +1,8 @@
 
 [[dependencies]]
+  name = "github.com/pkg/errors"
+  version = ">=0.8.0, <1.0.0"
+
+[[dependencies]]
   name = "github.com/urfave/negroni"
   version = ">=0.2.0, <1.0.0"
