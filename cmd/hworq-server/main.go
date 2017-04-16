@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/yuuki/hworq/pkg/db"
 	"github.com/yuuki/hworq/pkg/web"
 )
 
@@ -54,8 +55,16 @@ func (cli *CLI) Run(args []string) int {
 		return 0
 	}
 
+	log.Println("Connecting postgres ...")
+	db, err := db.New()
+	if err != nil {
+		log.Printf("postgres initialize error: %v\n", err)
+		return 2
+	}
+
 	handler := web.New(&web.Option{
 		Port: port,
+		DB:   db,
 	})
 	go handler.Run()
 
