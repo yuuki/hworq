@@ -6,7 +6,9 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/pkg/errors"
 	"github.com/urfave/negroni"
+	"github.com/yuuki/hworq/pkg/db"
 )
 
 const (
@@ -16,11 +18,13 @@ const (
 // Handler serves various HTTP endpoints of the Diamond server
 type Handler struct {
 	server *http.Server
+	db     *db.DB
 }
 
 // Option for the web Handler.
 type Option struct {
 	Port string
+	DB   *db.DB
 }
 
 // New initializes a new web Handler.
@@ -33,9 +37,11 @@ func New(o *Option) *Handler {
 
 	h := &Handler{
 		server: srv,
+		db:     o.DB,
 	}
 
 	mux := http.NewServeMux()
+	mux.Handle("/ping", h.pingHandler())
 	n.UseHandler(mux)
 
 	return h
@@ -58,4 +64,17 @@ func (h *Handler) Shutdown(sig os.Signal) error {
 		return err
 	}
 	return nil
+}
+
+// pingHandler returns a HTTP handler for the endpoint to ping storage.
+func (h *Handler) pingHandler() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if err := h.db.Ping(); err != nil {
+			log.Printf("%+v", err) // Print stack trace by pkg/errors
+			unavaliableError(w, errors.Cause(err).Error())
+			return
+		}
+		ok(w, "PONG")
+		return
+	})
 }
