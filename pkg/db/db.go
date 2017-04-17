@@ -6,11 +6,19 @@ import (
 
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
+
+	"github.com/yuuki/hworq/pkg/data"
 )
 
 const (
 	DefaultDBUserName = "hworq"
 	DefaultDBName     = "hworq"
+)
+
+var (
+	Schemas = []string{
+		"data/schema/queue.sql",
+	}
 )
 
 type DB struct {
@@ -28,4 +36,18 @@ func New() (*DB, error) {
 		return nil, errors.Wrap(err, "postgres ping error")
 	}
 	return &DB{db}, nil
+}
+
+func (db *DB) CreateSchema() error {
+	for _, schema := range Schemas {
+		sql, err := data.Asset(schema)
+		if err != nil {
+			return errors.Wrapf(err, "get schema error: %v", schema)
+		}
+		_, err = db.Exec(fmt.Sprintf("%s", sql))
+		if err != nil {
+			return errors.Wrapf(err, "exec schema error: %s", sql)
+		}
+	}
+	return nil
 }

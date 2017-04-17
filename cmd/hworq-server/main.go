@@ -34,6 +34,7 @@ func (cli *CLI) Run(args []string) int {
 	var (
 		port    string
 		version bool
+		init    bool
 	)
 
 	flags := flag.NewFlagSet(Name, flag.ContinueOnError)
@@ -43,6 +44,8 @@ func (cli *CLI) Run(args []string) int {
 	}
 	flags.StringVar(&port, "port", DefaultPort, "")
 	flags.StringVar(&port, "P", DefaultPort, "")
+	flags.BoolVar(&init, "init", false, "")
+	flags.BoolVar(&init, "I", false, "")
 	flags.BoolVar(&version, "version", false, "")
 	flags.BoolVar(&version, "v", false, "")
 
@@ -60,6 +63,14 @@ func (cli *CLI) Run(args []string) int {
 	if err != nil {
 		log.Printf("postgres initialize error: %v\n", err)
 		return 2
+	}
+
+	if init {
+		log.Println("Creating postgres schema ...")
+		if err := db.CreateSchema(); err != nil {
+			log.Printf("postgres initialize error: %v\n", err)
+			return 2
+		}
 	}
 
 	handler := web.New(&web.Option{
