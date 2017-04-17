@@ -83,7 +83,7 @@ func dataSchemaQueueSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "data/schema/queue.sql", size: 838, mode: os.FileMode(420), modTime: time.Unix(1492439390, 0)}
+	info := bindataFileInfo{name: "data/schema/queue.sql", size: 838, mode: os.FileMode(420), modTime: time.Unix(1492439480, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

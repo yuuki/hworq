@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/julienschmidt/httprouter"
 	"github.com/pkg/errors"
 	"github.com/urfave/negroni"
+
 	"github.com/yuuki/hworq/pkg/db"
 )
 
@@ -40,9 +42,9 @@ func New(o *Option) *Handler {
 		db:     o.DB,
 	}
 
-	mux := http.NewServeMux()
-	mux.Handle("/ping", h.pingHandler())
-	n.UseHandler(mux)
+	router := httprouter.New()
+	router.GET("/ping", h.pingHandler)
+	n.UseHandler(router)
 
 	return h
 }
@@ -67,14 +69,12 @@ func (h *Handler) Shutdown(sig os.Signal) error {
 }
 
 // pingHandler returns a HTTP handler for the endpoint to ping storage.
-func (h *Handler) pingHandler() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if err := h.db.Ping(); err != nil {
-			log.Printf("%+v", err) // Print stack trace by pkg/errors
-			unavaliableError(w, errors.Cause(err).Error())
-			return
-		}
-		ok(w, "PONG")
+func (h *Handler) pingHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	if err := h.db.Ping(); err != nil {
+		log.Printf("%+v", err) // Print stack trace by pkg/errors
+		unavaliableError(w, errors.Cause(err).Error())
 		return
-	})
+	}
+	ok(w, "PONG")
+	return
 }
