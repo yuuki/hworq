@@ -7,3 +7,6 @@
 - github.com/lib/pq
   - Copyright (c) 2011-2013, 'pq' Contributors Portions Copyright (C) 2011 Blake Mizerany
   - [MIT LICENSE](https://github.com/lib/pq/blob/master/LICENSE.md)
+- github.com/julienschmidt/httprouter
+  - Copyright (c) 2013 Julien Schmidt. All rights reserved.
+  - [BSD LICENSE](https://github.com/julienschmidt/httprouter/blob/master/LICENSE)
