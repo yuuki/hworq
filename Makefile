@@ -4,8 +4,11 @@ PKGS = $$(go list ./... | grep -v vendor)
 
 all: build
 
+dep:
+	go get github.com/jteeuwen/go-bindata/...
+
 .PHONY: build
-build:
+build: assets
 	go build -ldflags "-X main.GitCommit=\"$(COMMIT)\"" $(PKG)/cmd/...
 
 .PHONY: test
@@ -18,6 +21,10 @@ test-race:
 
 .PHONY: test-all
 test-all: vet test-race
+
+.PHONY: dep assets
+assets: data/schema/
+	go-bindata -o pkg/data/bindata.go -pkg data data/schema/
 
 .PHONY: cover
 cover:
