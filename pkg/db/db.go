@@ -21,10 +21,12 @@ var (
 	}
 )
 
+// DB represents a Database handler.
 type DB struct {
 	*sql.DB
 }
 
+// New creates the DB object.
 func New() (*DB, error) {
 	db, err := sql.Open("postgres", fmt.Sprintf(
 		"user=%s dbname=%s sslmode=disable", DefaultDBUserName, DefaultDBName,
@@ -38,6 +40,7 @@ func New() (*DB, error) {
 	return &DB{db}, nil
 }
 
+// CreateSchema creates the table schemas defined by the paths including Schemas.
 func (db *DB) CreateSchema() error {
 	for _, schema := range Schemas {
 		sql, err := data.Asset(schema)
